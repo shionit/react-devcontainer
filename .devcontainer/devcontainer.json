@@ -33,12 +33,13 @@
 		"CoenraadS.bracket-pair-colorizer",
 		"streetsidesoftware.code-spell-checker",
 		"VisualStudioExptTeam.vscodeintellicode",
-		"TabNine.tabnine-vscode",
 		"mhutchie.git-graph"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	"forwardPorts": [3000],
+
+	"remoteEnv": { "CHOKIDAR_USEPOLLING": "true" },
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "yarn install",
