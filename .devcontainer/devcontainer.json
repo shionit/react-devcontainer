@@ -1,51 +1,51 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
-// https://github.com/microsoft/vscode-dev-containers/tree/v0.158.0/containers/typescript-node
+// For format details, see https://aka.ms/devcontainer.json
+// For available features, see https://github.com/devcontainers/features
 {
-	"name": "Create React App & Node.js 14 & TypeScript",
+	"name": "React & Node.js (TypeScript)",
 	"build": {
 		"dockerfile": "Dockerfile",
-		// Update 'VARIANT' to pick a Node version: 10, 12, 14
+		// Update 'VARIANT' to pick a Node.js version (use even numbers for LTS): 22, 20, 18
 		"args": {
-			"VARIANT": "14"
+			"VARIANT": "20-bookworm"
 		}
 	},
 
-	// Set *default* container specific settings.json values on container create.
-	"settings": {
-		"terminal.integrated.shell.linux": "/bin/zsh",
-		"files.trimTrailingWhitespace": true,
-		"editor.formatOnSave": true,
-		"editor.codeActionsOnSave": {
-			"source.fixAll.eslint": true
-		},
-	},
-
-	// Add the IDs of extensions you want installed when the container is created.
-	"extensions": [
-		"dbaeumer.vscode-eslint",
-		"jawandarajbir.react-vscode-extension-pack",
-		"planbcoding.vscode-react-refactor",
-		"msjsdiag.debugger-for-chrome",
-		"dsznajder.es7-react-js-snippets",
-		"Zignd.html-css-class-completion",
-		"esbenp.prettier-vscode",
-		"formulahendry.auto-rename-tag",
-		"shardulm94.trailing-spaces",
-		"christian-kohler.path-intellisense",
-		"CoenraadS.bracket-pair-colorizer",
-		"streetsidesoftware.code-spell-checker",
-		"VisualStudioExptTeam.vscodeintellicode",
-		"mhutchie.git-graph"
-	],
-
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// Forward the default React dev-server port.
 	"forwardPorts": [3000],
 
+	// CHOKIDAR_USEPOLLING is required for file-watch events to work inside Docker on
+	// macOS and Windows hosts, where inotify cannot cross the VM boundary.
 	"remoteEnv": { "CHOKIDAR_USEPOLLING": "true" },
 
-	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "yarn install",
+	// Run as the non-root 'node' user for least-privilege inside the container.
+	"remoteUser": "node",
 
-	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
-	"remoteUser": "node"
+	// Use the current devcontainer spec key names.
+	// The legacy top-level 'settings' and 'extensions' keys were removed in VS Code 1.77.
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"terminal.integrated.defaultProfile.linux": "zsh",
+				"files.trimTrailingWhitespace": true,
+				"editor.formatOnSave": true,
+				"editor.codeActionsOnSave": {
+					"source.fixAll.eslint": "explicit"
+				}
+			},
+			"extensions": [
+				"dbaeumer.vscode-eslint",
+				"esbenp.prettier-vscode",
+				"dsznajder.es7-react-js-snippets",
+				"formulahendry.auto-rename-tag",
+				"christian-kohler.path-intellisense",
+				"streetsidesoftware.code-spell-checker",
+				"VisualStudioExptTeam.vscodeintellicode",
+				"mhutchie.git-graph",
+				"ms-vscode.vscode-typescript-next"
+			]
+		}
+	}
+
+	// Uncomment to run commands after the container is created.
+	// "postCreateCommand": "npm install"
 }

@@ -1,0 +1,12 @@
+# CODEOWNERS
+# Defines who must review PRs that touch security-sensitive paths.
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default: repo owner reviews everything
+*                               @shionit
+
+# Require explicit review for any change to CI, supply-chain config, or security files.
+.github/                        @shionit
+.devcontainer/                  @shionit
+.dockerignore                   @shionit
+SECURITY.md                     @shionit

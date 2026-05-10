@@ -1,0 +1,44 @@
+# Prevent leaking secrets or large files into the Docker build context.
+# The devcontainer workspace is bind-mounted at runtime — files listed here
+# are excluded from the Dockerfile COPY/ADD instructions only.
+
+# Version control
+.git
+.gitignore
+
+# Secrets and local configuration (never bake these into image layers)
+.env
+.env.*
+*.pem
+*.key
+*.cert
+*.p12
+*.pfx
+secrets/
+credentials/
+
+# Node dependencies (rebuilt inside the container)
+node_modules/
+npm-debug.log
+yarn-error.log
+.npm
+
+# OS artefacts
+.DS_Store
+Thumbs.db
+
+# Editor artefacts
+.vscode/
+*.swp
+*.swo
+
+# Build output
+dist/
+build/
+out/
+
+# Test output
+coverage/
+
+# CI / GitHub
+.github/

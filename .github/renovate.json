@@ -1,0 +1,66 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Renovate keeps Docker base images and GitHub Actions pinned to current, trusted versions.",
+
+  "extends": [
+    // config:recommended sets sensible defaults (automerge off, labels, PR limits, etc.)
+    // and includes the :semanticCommits, :separatePatchReleases, and group:monorepos presets.
+    "config:recommended"
+  ],
+
+  // pinDigests: true converts all Docker and GitHub Actions references from
+  // mutable tags (e.g. 'v4', 'latest') to immutable SHA digests.
+  // This prevents a compromised upstream tag from silently changing what runs
+  // in CI — a key supply-chain hardening measure.
+  // Renovate then keeps those digests current with automated PRs.
+  "pinDigests": true,
+
+  // Limit concurrent Renovate PRs to avoid overwhelming a personal repo.
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 2,
+
+  "packageRules": [
+    {
+      // --- GitHub Actions ---
+      // Group all GitHub Actions version bumps into a single weekly PR.
+      // SHA-pinned actions are low-risk to update; requiring a 3-day wait
+      // before automerge reduces the chance of immediately adopting a
+      // newly-released (but potentially broken) action version.
+      "matchManagers": ["github-actions"],
+      "groupName": "GitHub Actions",
+      "schedule": ["every week on monday"],
+      "automerge": true,
+      "automergeType": "pr",
+      "automergeStrategy": "squash",
+      "minimumReleaseAge": "3 days",
+      "labels": ["dependencies", "github-actions"]
+    },
+    {
+      // --- Docker base images ---
+      // Keep the devcontainer base image updated but do NOT automerge.
+      // Base image bumps may introduce breaking toolchain changes that
+      // should be reviewed and tested before merging.
+      "matchManagers": ["dockerfile"],
+      "groupName": "Docker base images",
+      "schedule": ["every month on the first day of the month"],
+      "automerge": false,
+      "labels": ["dependencies", "docker"]
+    },
+    {
+      // --- Digest-only pinning PRs ---
+      // When Renovate first runs, it will open PRs that convert mutable tags
+      // to SHA digests (these contain 'pin' in the update type).
+      // Automerge these immediately — they are semantically identical to the
+      // current version and only improve supply-chain integrity.
+      "matchUpdateTypes": ["pin", "pinDigest"],
+      "groupName": "Pin digests",
+      "automerge": true,
+      "automergeType": "pr",
+      "labels": ["dependencies", "security", "pin"]
+    }
+  ],
+
+  // Commit messages will follow Conventional Commits format, e.g.:
+  //   chore(deps): update actions/checkout digest to abc1234
+  "commitMessagePrefix": "chore(deps):"
+}

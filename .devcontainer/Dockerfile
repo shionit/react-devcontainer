@@ -1,19 +1,19 @@
-# See here for image contents: https://github.com/microsoft/vscode-dev-containers/tree/v0.158.0/containers/typescript-node/.devcontainer/base.Dockerfile
+# See https://github.com/devcontainers/images/tree/main/src/typescript-node
+# for available VARIANT values and image contents.
+#
+# [Choice] Node.js version (use even numbers for LTS): 22, 20, 18
+ARG VARIANT="20-bookworm"
+FROM mcr.microsoft.com/devcontainers/typescript-node:1-${VARIANT}
 
-# [Choice] Node.js version: 14, 12, 10
-ARG VARIANT="14-buster"
-FROM mcr.microsoft.com/vscode/devcontainers/typescript-node:0-${VARIANT}
-
-# copy all files to cache packages
-COPY . .
-
-# [Optional] Uncomment this section to install additional OS packages.
+# [Optional] Install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 #     && apt-get -y install --no-install-recommends <your-package-list-here>
 
-# [Optional] Uncomment if you want to install an additional version of node using nvm
-# ARG EXTRA_NODE_VERSION=10
+# [Optional] Install an additional Node.js version via nvm.
+# ARG EXTRA_NODE_VERSION=18
 # RUN su node -c "source /usr/local/share/nvm/nvm.sh && nvm install ${EXTRA_NODE_VERSION}"
 
-# [Optional] Uncomment if you want to install more global node packages
-RUN su node -c "npm install -g create-react-app"
+# [Optional] Install global Node.js tools needed inside the container.
+# create-react-app is deprecated; use the Vite or Next.js scaffolders instead.
+# Uncomment and adjust as needed:
+# RUN su node -c "npm install -g vite"

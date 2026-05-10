@@ -1,0 +1,58 @@
+name: DevContainer Build Check
+
+# Validate that the devcontainer image builds successfully on every push/PR.
+# This catches broken base-image references, bad Dockerfile syntax, and
+# missing build-arg defaults before they affect users cloning the template.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".devcontainer/**"
+      - ".dockerignore"
+      - ".github/workflows/devcontainer-ci.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - ".devcontainer/**"
+      - ".dockerignore"
+      - ".github/workflows/devcontainer-ci.yml"
+
+# Deny all permissions at the workflow level; grant only what each job needs.
+permissions: {}
+
+jobs:
+  build:
+    name: Build devcontainer image
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read  # required by actions/checkout
+
+    steps:
+      # StepSecurity Harden Runner — audits outbound network traffic.
+      # egress-policy: audit  ->  logs unexpected calls without blocking them.
+      # Switch to 'block' (with an explicit 'allowed-endpoints' list) once you
+      # have confirmed all required hosts in the audit logs.
+      # SHA pinned; Renovate keeps this up to date (see .github/renovate.json).
+      - name: Harden Runner
+        uses: step-security/harden-runner@ec9f347b7fe90c3e21c3dcc695e6a78f01c4d23d  # v2.10.4
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+
+      # Build the Dockerfile directly with docker build.
+      # Using --no-cache ensures the base image tag is actually pulled from the
+      # registry rather than served from a potentially stale local cache.
+      # The VARIANT build-arg must match the default in the Dockerfile.
+      - name: Build devcontainer Dockerfile
+        env:
+          VARIANT: "20-bookworm"
+        run: |
+          docker build \
+            --file .devcontainer/Dockerfile \
+            --build-arg "VARIANT=${VARIANT}" \
+            --no-cache \
+            .devcontainer
