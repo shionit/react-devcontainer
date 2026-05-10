@@ -36,7 +36,7 @@ jobs:
       # have confirmed all required hosts in the audit logs.
       # SHA pinned; Renovate keeps this up to date (see .github/renovate.json).
       - name: Harden Runner
-        uses: step-security/harden-runner@ec9f347b7fe90c3e21c3dcc695e6a78f01c4d23d  # v2.10.4
+        uses: step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450  # v2.19.1
         with:
           egress-policy: audit
 
